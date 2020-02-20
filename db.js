@@ -20,23 +20,30 @@ const sync = async () => {
     CREATE TABLE users(
       id UUID PRIMARY KEY,
       name VARCHAR,
-      "departmentId" UUID REFERENCES departments(id)
+      "departmentId" UUID REFERENCES departments(id) DEFAULT NULL
     );
 
-    INSERT INTO departments (id, name) VALUES (uuid(), 'Chaise');
-    INSERT INTO departments (id, name) VALUES (uuid(), 'Kelly');
+    INSERT INTO departments (id, name) VALUES ('${uuid()}', 'Police');
+    INSERT INTO departments (id, name) VALUES ('${uuid()}', 'Fullstack');
+
+    INSERT INTO users (id, name) VALUES ('${uuid()}', 'Kelli');
+    INSERT INTO users (id, name) VALUES ('${uuid()}', 'Chaise');
+
   `;
+
   await client.query(SQL);
-  //DROP and RECREATE TABLES
-  //remember "departmentId" will need to be in quotes
 };
 
 const readDepartments = async () => {
-  return [];
+  const SQL = `SELECT * FROM departments`;
+  const response = await client.query(SQL);
+  return response.rows;
 };
 
 const readUsers = async () => {
-  return [];
+  const SQL = `SELECT * FROM users`;
+  const response = await client.query(SQL);
+  return response.rows;
 };
 
 module.exports = {
