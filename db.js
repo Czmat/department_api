@@ -40,28 +40,33 @@ const readDepartments = async () => {
   return response.rows;
 };
 
+const createDepartment = async name => {
+  const SQL = `INSERT INTO departments (id, name) VALUES ($1, $2) returning *`;
+  const response = await client.query(SQL, [uuid(), name]);
+  return response.rows[0];
+};
+
 const readUsers = async () => {
   const SQL = `SELECT * FROM users`;
   const response = await client.query(SQL);
   return response.rows;
 };
 
-module.exports = {
-  sync,
-  readDepartments,
-  readUsers,
-};
+// module.exports = {
+//   sync,
+//   readDepartments,
+//   readUsers,
+// };
 //you will eventually need to export all of these
-/*
+
 module.exports = {
   sync,
   readDepartments,
   readUsers,
   createDepartment,
-  createUser,
-  deleteDepartment,
-  deleteUser,
-  updateUser,
-  updateDepartment
+  // createUser,
+  // deleteDepartment,
+  // deleteUser,
+  // updateUser,
+  // updateDepartment
 };
-*/

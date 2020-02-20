@@ -17,6 +17,12 @@ app.get('/api/users', (req, res, next) => {
     .catch(next);
 });
 
+app.post('/api/departments', (req, res, next) => {
+  db.createDepartment('english')
+    .then(response => res.send(response))
+    .catch(next);
+});
+
 app.use((req, res, next) => {
   next({ status: 404, message: `page not found - ${req.method} - ${req.url}` });
 });
@@ -30,7 +36,7 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 
 db.sync().then(async () => {
-  console.log(await db.readUsers());
+  console.log(await db.createDepartment('math'));
 
   console.log('synced');
   app.listen(port, () => console.log(`listening on port ${port}`));
