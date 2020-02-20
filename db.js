@@ -52,6 +52,12 @@ const readUsers = async () => {
   return response.rows;
 };
 
+const createUser = async (name, departmentId) => {
+  const SQL = `INSERT INTO users (id, name, "departmentId") VALUES ($1, $2, $3) returning *`;
+  const response = await client.query(SQL, [uuid(), name, departmentId]);
+  return response.rows[0];
+};
+
 // module.exports = {
 //   sync,
 //   readDepartments,
@@ -64,7 +70,7 @@ module.exports = {
   readDepartments,
   readUsers,
   createDepartment,
-  // createUser,
+  createUser,
   // deleteDepartment,
   // deleteUser,
   // updateUser,

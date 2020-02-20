@@ -5,6 +5,11 @@ app.use(require('cors')());
 
 //don't forget your body parser!
 
+app.use((req, res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
+
 app.get('/api/departments', (req, res, next) => {
   db.readDepartments()
     .then(departments => res.send(departments))
@@ -19,6 +24,12 @@ app.get('/api/users', (req, res, next) => {
 
 app.post('/api/departments', (req, res, next) => {
   db.createDepartment('english')
+    .then(response => res.send(response))
+    .catch(next);
+});
+
+app.post('/api/users', (req, res, next) => {
+  db.createUser()
     .then(response => res.send(response))
     .catch(next);
 });
