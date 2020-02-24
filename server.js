@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
 const db = require('./db');
+
 app.use(require('cors')());
 
-//don't forget your body parser!
+app.use(express.json());
 
 app.use((req, res, next) => {
   console.log(req.method, req.url);
@@ -23,13 +24,50 @@ app.get('/api/users', (req, res, next) => {
 });
 
 app.post('/api/departments', (req, res, next) => {
-  db.createDepartment('english')
+  db.createDepartment(req.body.name)
     .then(response => res.send(response))
     .catch(next);
 });
 
 app.post('/api/users', (req, res, next) => {
-  db.createUser()
+  const user = req.body;
+  db.createUser(user.name, user.departmentId)
+    .then(response => {
+      res.send(response);
+    })
+    .catch(next);
+});
+
+app.put('/api/departments/:id', (req, res, next) => {
+  const department = req.body;
+  const id = req.params.id;
+  db.updateDepartment(department)
+    .then(response => {
+      res.send(response);
+    })
+    .catch(next);
+});
+
+app.put('/api/users/:id', (req, res, next) => {
+  const user = req.body;
+  const id = req.params.id;
+  db.updateUser(user)
+    .then(response => {
+      res.send(response);
+    })
+    .catch(next);
+});
+
+app.delete('/api/departments/:id', (req, res, next) => {
+  const id = req.params.id;
+  db.deleteDepartment(id)
+    .then(response => res.send(response))
+    .catch(next);
+});
+
+app.delete('/api/users/:id', (req, res, next) => {
+  const id = req.params.id;
+  db.deleteUser(id)
     .then(response => res.send(response))
     .catch(next);
 });
@@ -47,8 +85,6 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 
 db.sync().then(async () => {
-  console.log(await db.createDepartment('math'));
-
   console.log('synced');
   app.listen(port, () => console.log(`listening on port ${port}`));
 });
